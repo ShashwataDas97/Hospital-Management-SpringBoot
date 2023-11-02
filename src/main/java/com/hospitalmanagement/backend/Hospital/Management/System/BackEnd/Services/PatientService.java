@@ -1,5 +1,6 @@
 package com.hospitalmanagement.backend.Hospital.Management.System.BackEnd.Services;
 
+import com.hospitalmanagement.backend.Hospital.Management.System.BackEnd.Models.Bill;
 import com.hospitalmanagement.backend.Hospital.Management.System.BackEnd.Models.Doctor;
 import com.hospitalmanagement.backend.Hospital.Management.System.BackEnd.Models.Patient;
 import com.hospitalmanagement.backend.Hospital.Management.System.BackEnd.Repositries.DoctorRepository;
@@ -36,8 +37,20 @@ public class PatientService {
         return patientRepo.getPatientsDoctor(pId);
     }
 
-    public void dischargePatient(String pId){
+    public Bill dischargePatient(String pId, String dischargeDate){
+        // dd-mm-yy
+        Patient obj = patientRepo.getPatientByID(pId);
+        String admitDate = obj.getPatientAdmitDate();
+        String[] admitDateArray = admitDate.split("-");
+        String[] dischargeDateArray = dischargeDate.split("-");
+        int diff = Integer.parseInt(dischargeDateArray[0]) - Integer.parseInt(admitDateArray[0]);
+        Doctor docObj = patientRepo.getPatientsDoctor(pId);
+        int docFee = docObj.getDocFee();
+        int bedFee = hospitalService.getBedFee();
+        int totalBill = diff * (docFee + bedFee);
+        Bill billObj = new Bill(docFee,bedFee,totalBill);
         patientRepo.dischargePatientByPatientId(pId);
+        return billObj;
     }
 
     public Patient getPatientById(String pId){
