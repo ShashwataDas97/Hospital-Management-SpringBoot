@@ -19,6 +19,17 @@ public class DoctorRepository {
         this.overAllDoctors = 0;
     }
 
+    public void removeParticularPatientForParticularDoctor(String pId, String docId){
+        ArrayList<Patient> allPatientsHandleDoctor = docVsPatient.get(docId);
+        for(int i=0;i<allPatientsHandleDoctor.size();i++){
+            Patient obj = allPatientsHandleDoctor.get(i);
+            if(obj.getpId().equals(pId)){
+                allPatientsHandleDoctor.remove(i);
+                break;
+            }
+        }
+    }
+
     public void addDoctorToDatabase(Doctor obj){
         this.overAllDoctors += 1;
         docVsPatient.put(obj.getDocID(),new ArrayList<>());
